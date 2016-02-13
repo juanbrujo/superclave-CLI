@@ -1,0 +1,24 @@
+{
+  "name": "superclave",
+  "version": "0.0.1",
+  "description": "usa la SuperClave el Banco Santander Chile sin salir de tu terminal",
+  "main": "bin/init.js",
+  "bin": {
+    "superclave": "init.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/juanbrujo/superclave"
+  },
+  "author": "Jorge Epuñan <juanbrujo@gmail.com> (http://www.csslab.cl)",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "dotenv": "^2.0.0",
+    "fs": "0.0.2",
+    "inquirer": "^0.12.0"
+  }
+}
