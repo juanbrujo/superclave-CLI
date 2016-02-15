@@ -23,8 +23,6 @@ TO-DO
 
 ### local
 
-Descarga los archivos y:
-
 ```
 $ git clone https://github.com/juanbrujo/superclave-CLI
 $ cd superclave-CLI
