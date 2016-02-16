@@ -44,7 +44,7 @@ $ node bin/init.js
 
 Este software fue hecho exclusivamente para solucionar la pérdida de tiempo que sufro cada vez que me toca hacer transferencias electrónicas. Se publica en este repositorio para estudio del código fuente y transparencia de su funcionalidad interna.
 
-Ninguna información ingresada a través de este desarrollo es enviada ó procesada por terceros; las coordenadas se guardan de manera local en el computador del usuario que quiere utilizar este software y una vez.
+Ninguna información ingresada a través de este desarrollo es enviada ó procesada por terceros; las coordenadas se guardan cifradas en el computador del usuario que quiere utilizar este software y permite con un simple comando remover las coordenadas ya guardadas.
 
 Este repositorio, el desarrollo que contiene y su autor no tienen relación oficial alguna con Banco Santander Chile ni alguna de sus sus empresas, filiales, socios ó representantes legales. 
 
