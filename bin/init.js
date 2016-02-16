@@ -343,13 +343,27 @@ var pswrdQuestion = [
   }
 ];
 
+var confirmCleanQuestion = [
+  {
+    type: 'confirm',
+    name: 'confirmClean',
+    message: 'Se borrarán las coordenadas ya guardadas. ¿Confirmas?'
+  }
+];
+
 // check if .coords exists and save them to coords variable
 // else create empty file
 function init(){
 
 	if (program.clean) {
 
-		cleanCoords();
+    inquirer.prompt( confirmCleanQuestion, function( answers ) {
+      if ( answers.confirmClean ) {
+        cleanCoords();
+      } else {
+        return false;
+      }
+    });
 
 	} else {
 
