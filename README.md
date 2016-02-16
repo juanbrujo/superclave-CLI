@@ -32,13 +32,13 @@ $ node bin/init.js
 
 ## TO-DO:
 
-[-] npm global installation
-[-] verificar que coordenadas no sean repetidas
-[-] verificar que coordenadas sean incrementales en filas
-[x] cifrado de las coordenadas guardadas
-[-] aceptación de términos y condiciones
-[-] documentar las funciones
-[-] testing 😰
+- [ ] npm global installation
+- [ ] verificar que coordenadas no sean repetidas
+- [ ] verificar que coordenadas sean incrementales en filas
+- [x] cifrado de las coordenadas guardadas
+- [ ] aceptación de términos y condiciones
+- [ ] documentar las funciones
+- [ ] testing 😰
 
 ## Disclaimer:
 
