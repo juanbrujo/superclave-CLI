@@ -36,7 +36,7 @@ function getNumFromChar(letter){
 
 var intro = '\r\n[ SuperClave CLI v.' + pkg.version + ' ]\r\n';
 
-var instruccionesCoords = "La coordenada son 2 caracteres (ej. A1):\n - La primera una letra entre la A a la J\n - La segunda un número entre 1-5";
+var instruccionesCoords = "La coordenada son 2 caracteres (ej. A1):\n - La primera una letra entre la A a la J\n - La segunda un número entre 1 y 5 (incluídos)";
 
 var requerimientoCoords = function(orden, coord){
 	return "Ingrese la " + orden + " coordenada (ej. " + coord + ")";
@@ -151,10 +151,10 @@ function askCoords() {
 // ================================================
 
 var instruccionesInst = function(orden){
-	return 'Ingrese la ' + orden + ' fila de 2 números separados por coma\n(por ejemplo: 54,48,99,24,65,10,78,12,61):';
+	return 'Ingrese la ' + orden + ' fila de 2 números separados por coma\n(por ejemplo: 54,48,99,24,65,10,78,12,61,38):';
 }
 
-var requerimientoInst = 'Deben ser exactas 9 secuencia de 2 números separados por coma\n(por ejemplo: 54,48,99,24,65,10,78,12,61)';
+var requerimientoInst = 'Deben ser exactas 10 secuencias de 2 números separados por coma\n(por ejemplo: 54,48,99,24,65,10,78,12,61,38)';
 
 // ================================================
 // ASK FOR COORDS TO SAVE THEM
@@ -233,14 +233,14 @@ var installQuestions = [
 	{
 		type: 'confirm',
     name: 'confirmInstall',
-    message: 'Listo para escribir archivo con coordenadas. ¿Prosigo?'
+    message: 'Listo para escribir archivo con coordenadas. ¿Confirmar?'
 	}
 ];
 
 function createCoords(){
 	// say hello
   console.log(intro);
-  console.log('En este paso se procederá a crear el archivo oculto con las coordenadas de tu tarjeta SuperClave');
+  console.log('En este instante se creará el archivo oculto con las coordenadas de tu tarjeta SuperClave');
 
   // ask
   inquirer.prompt( installQuestions, function( answers ) {
@@ -262,7 +262,7 @@ function createCoords(){
 }
 
 function checkRegexRowCoords(string){
-	return /^[1-9]\d(?:,[1-9]\d){8}$/.test(string);
+	return /^[1-9]\d(?:,[1-9]\d){9}$/.test(string);
 }
 
 function createCoordsFile(row1, row2, row3, row4, row5){
