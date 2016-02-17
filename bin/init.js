@@ -294,7 +294,7 @@ function createCoords(){
 }
 
 function checkRegexRowCoords(string){
-	return /^[1-9]\d(?:,[1-9]\d){9}$/.test(string);
+	return /^[0-9]\d(?:,[0-9]\d){9}$/.test(string);
 }
 
 function createCoordsFile(row1, row2, row3, row4, row5){
