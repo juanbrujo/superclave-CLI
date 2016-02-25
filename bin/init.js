@@ -7,7 +7,7 @@ var path 			= require('path'),
     program   = require('commander');
 
 var crypto = require('crypto'),
-    algorithm = 'AES-128-CBC-HMAC-SHA1',
+    algorithm = 'aes-256-ctr',
     pswrd = '';
 
 var multiArray = '';
@@ -28,6 +28,10 @@ function encrypt(text, pswrd){
 }
 
 function decrypt(text, pswrd){
+  // var decipher = crypto.createDecipher(algorithm,pswrd)
+  // var dec = decipher.update(text,'hex','utf8')
+  // dec += decipher.final('utf8');
+  // return dec;
   var decipher = crypto.createDecipher(algorithm,pswrd);
   try {
     var dec = decipher.update(text,'hex','utf8');
@@ -38,6 +42,7 @@ function decrypt(text, pswrd){
     var err = new Error('El password no coincide. Intente nuevamente.')
     throw err;
   }
+
 }
 
 function getCoords(row,col){
@@ -148,22 +153,41 @@ function askCoords() {
 	  var coord1 = answers.coord1,
 	      coord2 = answers.coord2,
 	      coord3 = answers.coord3,
-        pswrd = answers.pswrd;
+        pswrd  = answers.pswrd,
+        result1 = '',
+        result2 = '',
+        result3 = '';
 
-	  var Xcord = function(coord){ 
-	  	return getNumFromChar( coord.split('')[0] ); 
-	  },
-    Ycord = function(coord){ 
-			return restNumber( coord.split('')[1] ); 
-		};
+	  var Xcord = function(coord){
+	  	            return getNumFromChar( coord.split('')[0] ); 
+                },
+        Ycord = function(coord){ 
+                  return restNumber( coord.split('')[1] ); 
+                };
+
+    if( getCoords( Xcord(coord1), Ycord(coord1) ).toString().length === 1) {
+      result1 = '0' + getCoords( Xcord(coord1), Ycord(coord1) );
+    } else {
+      result1 = getCoords( Xcord(coord1), Ycord(coord1) );
+    }
+    if( getCoords( Xcord(coord2), Ycord(coord2) ).toString().length === 1) {
+      result2 = '0' + getCoords( Xcord(coord2), Ycord(coord2) );
+    } else {
+      result2 = getCoords( Xcord(coord2), Ycord(coord2) );
+    }
+    if( getCoords( Xcord(coord3), Ycord(coord3) ).toString().length === 1) {
+      result3 = '0' + getCoords( Xcord(coord3), Ycord(coord3) );
+    } else {
+      result3 = getCoords( Xcord(coord3), Ycord(coord3) );
+    }
 
 	  console.log('\nLas coordenadas ingresadas y sus valores son:');
 
 	  // return results
 	  console.log(' ----------------');
-	  console.log(' | ' + answers.coord1.toUpperCase() + ' | ' + answers.coord2.toUpperCase() + ' | ' + answers.coord3.toUpperCase() + ' | ');
+	  console.log(' | ' + coord1.toUpperCase() + ' | ' + coord2.toUpperCase() + ' | ' + coord3.toUpperCase() + ' | ');
 	  console.log('  --------------');
-	  console.log(' | ' + getCoords( Xcord(coord1), Ycord(coord1) ) + ' | ' + getCoords( Xcord(coord2), Ycord(coord2) ) + ' | ' + getCoords( Xcord(coord3), Ycord(coord3) ) + ' | ');
+	  console.log(' | ' + result1 + ' | ' + result2 + ' | ' + result3 + ' | ');
 	  console.log(' ----------------');
 
 	});
@@ -180,6 +204,7 @@ var instruccionesInst = function(orden){
 }
 
 var requerimientoInst = 'Deben ser exactas 10 secuencias de 2 números separados por coma\n(por ejemplo: 54,48,99,24,65,10,78,12,61,38)';
+var requerimientoPass = 'Debes ingresar una clave, aunque sea mínima';
 
 // ================================================
 // ASK FOR COORDS TO SAVE THEM
@@ -258,7 +283,14 @@ var installQuestions = [
   {
     type: 'password',
     name: 'pswrd',
-    message: 'Ingrese un password para encriptar las coordenadas en el archivo:'
+    message: 'Ingrese un password para encriptar las coordenadas en el archivo:',
+    validate: function( value ) {
+      if( value ) {
+        return true;
+      } else {
+        return requerimientoPass;
+      }
+    }
   }
 	,
 	{
@@ -294,7 +326,7 @@ function createCoords(){
 }
 
 function checkRegexRowCoords(string){
-	return /^[1-9]\d(?:,[1-9]\d){9}$/.test(string);
+	return /^[0-9]\d(?:,[0-9]\d){9}$/.test(string);
 }
 
 function createCoordsFile(row1, row2, row3, row4, row5){
@@ -378,7 +410,8 @@ function init(){
           inquirer.prompt( pswrdQuestion, function( answer ) {
             pswrd = answer.pswrd;
             coords = decrypt(coords, pswrd);
-            multiArray = JSON.parse('[' + coords + ']');
+            //multiArray = JSON.parse('[' + coords + ']');
+            eval("multiArray = " + '[' + coords + ']');
             askCoords();
           });
 
