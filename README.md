@@ -28,6 +28,8 @@ $ git clone https://github.com/juanbrujo/superclave-CLI
 $ cd superclave-CLI
 $ npm install
 $ node bin/init.js
+// para borrar archivo de coordenada y crear uno nuevo:
+$ node bin/init.js -c
 ```
 
 ## TO-DO:
