@@ -13,9 +13,16 @@ var multiArray  = '',
 
 program
   .version( pkg.version )
-  .usage( '[options] <file ...>' )
-  .option( '-c, --clean', 'Limpia archivo de coordenadas para crear uno nuevo.')
-  .parse(process.argv);
+  .option( '-c, --clean', 'Limpia archivo de coordenadas para crear uno nuevo' )
+  .option( '-v, --version', 'Muestra la versión instalada de SuperClave CLI' );
+
+program.on('--help', function(){
+  console.log('  Instrucciones de uso:');
+  console.log('    En la siguiente URL encontrarás documentos que pueden resolver tus dudas:');
+  console.log('    https://github.com/juanbrujo/superclave-CLI/wiki/');
+});
+
+program.parse( process.argv );
 
 // ================================================
 
