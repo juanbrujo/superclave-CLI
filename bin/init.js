@@ -4,13 +4,12 @@ var path 			= require('path'),
     pkg 			= require(path.join(__dirname, '../package.json')),
     fs 				= require('fs'),
     inquirer 	= require('inquirer'),
-    program   = require('commander');
+    program   = require('commander'),
+    crypto    = require('crypto');
 
-var crypto = require('crypto'),
-    algorithm = 'aes-256-ctr',
-    pswrd = '';
-
-var multiArray = '';
+var multiArray  = '',
+    algorithm   = 'aes-256-ctr',
+    pswrd       = '';
 
 program
   .version( pkg.version )
@@ -24,15 +23,13 @@ function encrypt(text, pswrd){
   var cipher = crypto.createCipher(algorithm,pswrd),
       crypted = cipher.update(text,'utf8','hex');
       crypted += cipher.final('hex');
+
   return crypted;
 }
 
 function decrypt(text, pswrd){
-  // var decipher = crypto.createDecipher(algorithm,pswrd)
-  // var dec = decipher.update(text,'hex','utf8')
-  // dec += decipher.final('utf8');
-  // return dec;
   var decipher = crypto.createDecipher(algorithm,pswrd);
+
   try {
     var dec = decipher.update(text,'hex','utf8');
     dec += decipher.final('utf8');
@@ -42,7 +39,6 @@ function decrypt(text, pswrd){
     var err = new Error('El password no coincide. Intente nuevamente.')
     throw err;
   }
-
 }
 
 function getCoords(row,col){
@@ -144,6 +140,7 @@ var coordsQuestions = [
 // ================================================
 
 function askCoords() {
+
   // say hello
   console.log(intro);
 
@@ -205,6 +202,7 @@ var instruccionesInst = function(orden){
 
 var requerimientoInst = 'Deben ser exactas 10 secuencias de 2 números separados por coma\n(por ejemplo: 54,48,99,24,65,10,78,12,61,38)';
 var requerimientoPass = 'Debes ingresar una clave, aunque sea mínima';
+
 
 // ================================================
 // ASK FOR COORDS TO SAVE THEM
@@ -360,21 +358,6 @@ function cleanCoords(){
 	});
 }
 
-var pswrdQuestion = [
-  {
-    type: 'password',
-    name: 'pswrd',
-    message: '¿Recuerdas el password que usaste para encriptar las coordenadas? La necesito ahora:',
-    validate: function( value ) {
-      if (value) {
-        return true;
-      } else {
-        return "Ingresa el password con el que guardaste tus coordenadas";
-      }
-    }
-  }
-];
-
 var confirmCleanQuestion = [
   {
     type: 'confirm',
@@ -382,6 +365,36 @@ var confirmCleanQuestion = [
     message: 'Se borrarán las coordenadas ya guardadas. ¿Confirmas?'
   }
 ];
+
+var askPassword = function(coordsFile){
+  inquirer.prompt( {
+    type: 'password',
+    name: 'pswrd',
+    message: 'Ingresa el password que usaste para encriptar tus coordenadas:',
+    validate: function( value ) {
+
+      if (value) {
+        pswrd   = value;
+        coords  = decrypt(coordsFile, pswrd);
+
+        try {
+          eval("multiArray = " + '[' + coords + ']');
+          return true;
+        } catch (ex) {
+          console.log(' No, es otra. ')
+          return false;
+        }
+      } else {
+        return "Ingresa el password con el que guardaste tus coordenadas";
+      }
+
+    }
+  }, function( answer ) {
+
+    askCoords();
+
+  });
+}
 
 // check if .coords exists and save them to coords variable
 // else create empty file
@@ -405,26 +418,15 @@ function init(){
 		    var coords = fs.readFileSync('./.coords', 'utf8');
 
 		    if(coords) {
-
           // ask for password
-          inquirer.prompt( pswrdQuestion, function( answer ) {
-            pswrd = answer.pswrd;
-            coords = decrypt(coords, pswrd);
-            //multiArray = JSON.parse('[' + coords + ']');
-            eval("multiArray = " + '[' + coords + ']');
-            askCoords();
-          });
-
+          askPassword(coords);
 		    } else {
-
+          // no coords, create new ones
 		    	createCoords();
-
 		    }
 		  } else if( err.code == 'ENOENT' ) {
-
 		    fs.writeFile('./.coords', '');
 		    createCoords();
-
 		  } else {
 		    console.log('Error: ', err.code);
 		  }
