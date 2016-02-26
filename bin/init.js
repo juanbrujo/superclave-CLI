@@ -288,7 +288,7 @@ var installQuestions = [
   {
     type: 'password',
     name: 'pswrd',
-    message: 'Ingrese un password para encriptar las coordenadas en el archivo:',
+    message: 'Ingrese un password para cifrar las coordenadas en el archivo:',
     validate: function( value ) {
       if( value ) {
         return true;
@@ -377,7 +377,7 @@ var askPassword = function(coordsFile){
   inquirer.prompt( {
     type: 'password',
     name: 'pswrd',
-    message: 'Ingresa el password que usaste para encriptar tus coordenadas:',
+    message: 'Ingresa el password que usaste para cifrar tus coordenadas:',
     validate: function( value ) {
 
       if (value) {
