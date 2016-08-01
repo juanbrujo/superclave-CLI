@@ -141,6 +141,13 @@ var coordsQuestions = [
       return val.toLowerCase(); 
     }
   }
+  ,
+  {
+    type: 'confirm',
+    name: 'askAgain',
+    message: '¿Deseaas volver a ingresar coordenadas?',
+    default: true
+  }
 ];
 
 // ================================================
@@ -148,9 +155,6 @@ var coordsQuestions = [
 // ================================================
 
 function askCoords() {
-
-  // say hello
-  console.log(intro);
 
   // ask
   inquirer.prompt( coordsQuestions, function( answers ) {
@@ -194,6 +198,10 @@ function askCoords() {
     console.log('  --------------');
     console.log(' | ' + result1 + ' | ' + result2 + ' | ' + result3 + ' | ');
     console.log(' ----------------');
+
+    if (answers.askAgain) { // must be improved, it works by now
+      askCoords();
+    }
 
   });
 
@@ -407,6 +415,9 @@ var askPassword = function(coordsFile){
 // check if .coords exists and save them to coords variable
 // else create empty file
 function init(){
+
+  // say hello
+  console.log(intro);
 
   if (program.clean) {
 
