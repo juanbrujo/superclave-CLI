@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-var path 			= require('path'),
-    pkg 			= require(path.join(__dirname, '../package.json')),
-    fs 				= require('fs'),
-    inquirer 	= require('inquirer'),
-    program   = require('commander'),
-    crypto    = require('crypto');
+var path        = require('path'),
+    pkg         = require(path.join(__dirname, '../package.json')),
+    fs          = require('fs'),
+    inquirer    = require('inquirer'),
+    program     = require('commander'),
+    crypto      = require('crypto');
 
 var multiArray  = '',
     algorithm   = 'aes-256-ctr',
@@ -27,9 +27,10 @@ program.parse( process.argv );
 // ================================================
 
 function encrypt(text, pswrd){
-  var cipher = crypto.createCipher(algorithm,pswrd),
-      crypted = cipher.update(text,'utf8','hex');
-      crypted += cipher.final('hex');
+  var cipher    = crypto.createCipher(algorithm,pswrd),
+      crypted   = cipher.update(text,'utf8','hex');
+
+  crypted       += cipher.final('hex');
 
   return crypted;
 }
@@ -39,6 +40,7 @@ function decrypt(text, pswrd){
 
   try {
     var dec = decipher.update(text,'hex','utf8');
+
     dec += decipher.final('utf8');
     return dec;
   } catch (ex) {
@@ -49,27 +51,26 @@ function decrypt(text, pswrd){
 }
 
 function getCoords(row,col){
-	return multiArray[col][row];
+  return multiArray[col][row];
 }
 
 function checkRegexCoord(string){
-	return /^[a-jA-J][1-5]$/.test(string);
+  return /^[a-jA-J][1-5]$/.test(string);
 }
 
 function restNumber(number){
-	return parseInt( number - 1 );
+  return parseInt( number - 1 );
 }
 
 function getNumFromChar(letter){
-//  return letter.charCodeAt(0)-97;
   var charactMap = ['a','b','c','d','e','f','g','h','i','j'];
   return charactMap.indexOf(letter);
 }
 
 var intro = '\r\n[ SuperClave CLI v.' + pkg.version + ' ]\r\n',
-    instruccionesCoords = "La coordenada son 2 caracteres (ej. A1):\n - La primera una letra entre la A a la J\n - La segunda un número entre 1-5",
+    instruccionesCoords = "La coordenada se compone de 2 caracteres (ej. A1):\n - La primera una letra entre la A a la J\n - La segunda un número entre 1-5",
     requerimientoCoords = function(orden, coord){
-	   return "Ingrese la " + orden + " coordenada (ej. " + coord + ")";
+     return "Ingrese la " + orden + " coordenada (ej. " + coord + ")";
     };
 
 
@@ -84,18 +85,18 @@ var coordsQuestions = [
     message: 'Primera coordenada:',
     validate: function( value ) {
       if ( value ) {
-      	var valueChecked = checkRegexCoord( value );
-      	if( valueChecked ) {
-      		return true;
-      	} else {
-      		return instruccionesCoords;
-      	}
+        var valueChecked = checkRegexCoord( value );
+        if( valueChecked ) {
+          return true;
+        } else {
+          return instruccionesCoords;
+        }
       } else {
         return requerimientoCoords('primera','A1');
       }
     },
     filter: function( val ) { 
-    	return val.toLowerCase(); 
+      return val.toLowerCase(); 
     }
   }
   ,
@@ -105,18 +106,18 @@ var coordsQuestions = [
     message: 'Segunda coordenada:',
     validate: function( value ) {
       if ( value ) {
-      	var valueChecked = checkRegexCoord( value );
-      	if( valueChecked ) {
-      		return true;
-      	} else {
-      		return instruccionesCoords;
-      	}
+        var valueChecked = checkRegexCoord( value );
+        if( valueChecked ) {
+          return true;
+        } else {
+          return instruccionesCoords;
+        }
       } else {
         return requerimientoCoords('segunda','C4');
       }
     },
     filter: function( val ) { 
-    	return val.toLowerCase(); 
+      return val.toLowerCase(); 
     }
   }
   ,
@@ -126,18 +127,18 @@ var coordsQuestions = [
     message: 'Tercera coordenada:',
     validate: function( value ) {
       if ( value ) {
-      	var valueChecked = checkRegexCoord( value );
-      	if( valueChecked ) {
-      		return true;
-      	} else {
-      		return instruccionesCoords;
-      	}
+        var valueChecked = checkRegexCoord( value );
+        if( valueChecked ) {
+          return true;
+        } else {
+          return instruccionesCoords;
+        }
       } else {
         return requerimientoCoords('tercera','E3');
       }
     },
     filter: function( val ) { 
-    	return val.toLowerCase(); 
+      return val.toLowerCase(); 
     }
   }
 ];
@@ -154,16 +155,16 @@ function askCoords() {
   // ask
   inquirer.prompt( coordsQuestions, function( answers ) {
 
-	  var coord1 = answers.coord1,
-	      coord2 = answers.coord2,
-	      coord3 = answers.coord3,
+    var coord1 = answers.coord1,
+        coord2 = answers.coord2,
+        coord3 = answers.coord3,
         pswrd  = answers.pswrd,
         result1 = '',
         result2 = '',
         result3 = '';
 
-	  var Xcord = function(coord){
-	  	            return getNumFromChar( coord.split('')[0] ); 
+    var Xcord = function(coord){
+                  return getNumFromChar( coord.split('')[0] ); 
                 },
         Ycord = function(coord){ 
                   return restNumber( coord.split('')[1] ); 
@@ -185,16 +186,16 @@ function askCoords() {
       result3 = getCoords( Xcord(coord3), Ycord(coord3) );
     }
 
-	  console.log('\nLas coordenadas ingresadas y sus valores son:');
+    console.log('\nSegún las coordenadas ingresadas, sus valores son:');
 
-	  // return results
-	  console.log(' ----------------');
-	  console.log(' | ' + coord1.toUpperCase() + ' | ' + coord2.toUpperCase() + ' | ' + coord3.toUpperCase() + ' | ');
-	  console.log('  --------------');
-	  console.log(' | ' + result1 + ' | ' + result2 + ' | ' + result3 + ' | ');
-	  console.log(' ----------------');
+    // return results
+    console.log(' ----------------');
+    console.log(' | ' + coord1.toUpperCase() + ' | ' + coord2.toUpperCase() + ' | ' + coord3.toUpperCase() + ' | ');
+    console.log('  --------------');
+    console.log(' | ' + result1 + ' | ' + result2 + ' | ' + result3 + ' | ');
+    console.log(' ----------------');
 
-	});
+  });
 
 };
 
@@ -204,7 +205,7 @@ function askCoords() {
 // ================================================
 
 var instruccionesInst = function(orden){
-	return 'Ingrese la ' + orden + ' fila de 2 números separados por coma\n(por ejemplo: 54,48,99,24,65,10,78,12,61,38):';
+  return 'Ingrese la ' + orden + ' fila de 2 números separados por coma\n(por ejemplo: 54,48,99,24,65,10,78,12,61,38):';
 }
 
 var requerimientoInst = 'Deben ser exactas 10 secuencias de 2 números separados por coma\n(por ejemplo: 54,48,99,24,65,10,78,12,61,38)';
@@ -215,75 +216,75 @@ var requerimientoPass = 'Debes ingresar una clave, aunque sea mínima';
 // ASK FOR COORDS TO SAVE THEM
 // ================================================
 var installQuestions = [
-	{
-		type: 'input',
+  {
+    type: 'input',
     name: 'row1',
     message: instruccionesInst('primera'),
     validate: function( value ) {
       var valueChecked = checkRegexRowCoords( value );
-    	if( valueChecked ) {
-    		return true;
-    	} else {
-    		return requerimientoInst;
-    	}
+      if( valueChecked ) {
+        return true;
+      } else {
+        return requerimientoInst;
+      }
     }
-	}
-	,
-	{
-		type: 'input',
+  }
+  ,
+  {
+    type: 'input',
     name: 'row2',
     message: instruccionesInst('segunda'),
     validate: function( value ) {
       var valueChecked = checkRegexRowCoords( value );
-    	if( valueChecked ) {
-    		return true;
-    	} else {
-    		return requerimientoInst;
-    	}
+      if( valueChecked ) {
+        return true;
+      } else {
+        return requerimientoInst;
+      }
     }
-	}
-	,
-	{
-		type: 'input',
+  }
+  ,
+  {
+    type: 'input',
     name: 'row3',
     message: instruccionesInst('tercera'),
     validate: function( value ) {
       var valueChecked = checkRegexRowCoords( value );
-    	if( valueChecked ) {
-    		return true;
-    	} else {
-    		return requerimientoInst;
-    	}
+      if( valueChecked ) {
+        return true;
+      } else {
+        return requerimientoInst;
+      }
     }
-	}
-	,
-	{
-		type: 'input',
+  }
+  ,
+  {
+    type: 'input',
     name: 'row4',
     message: instruccionesInst('cuarta'),
     validate: function( value ) {
       var valueChecked = checkRegexRowCoords( value );
-    	if( valueChecked ) {
-    		return true;
-    	} else {
-    		return requerimientoInst;
-    	}
+      if( valueChecked ) {
+        return true;
+      } else {
+        return requerimientoInst;
+      }
     }
-	}
-	,
-	{
-		type: 'input',
+  }
+  ,
+  {
+    type: 'input',
     name: 'row5',
     message: instruccionesInst('quinta'),
     validate: function( value ) {
       var valueChecked = checkRegexRowCoords( value );
-    	if( valueChecked ) {
-    		return true;
-    	} else {
-    		return requerimientoInst;
-    	}
+      if( valueChecked ) {
+        return true;
+      } else {
+        return requerimientoInst;
+      }
     }
-	}
+  }
   ,
   {
     type: 'password',
@@ -297,33 +298,34 @@ var installQuestions = [
       }
     }
   }
-	,
-	{
-		type: 'confirm',
+  ,
+  {
+    type: 'confirm',
     name: 'confirmInstall',
     message: 'Listo para escribir archivo con coordenadas. ¿Confirmar?'
-	}
+  }
 ];
 
 function createCoords(){
-	// say hello
+  // say hello
   console.log(intro);
   console.log('En este instante se creará el archivo oculto con las coordenadas de tu tarjeta SuperClave');
 
   // ask
   inquirer.prompt( installQuestions, function( answers ) {
 
-  	var row1 = answers.row1,
-        row2 = answers.row2,
-        row3 = answers.row3,
-        row4 = answers.row4,
-        row5 = answers.row5;
-        pswrd = answers.pswrd;
+    var row1  = answers.row1,
+        row2  = answers.row2,
+        row3  = answers.row3,
+        row4  = answers.row4,
+        row5  = answers.row5;
 
-  	if ( answers.confirmInstall ) {
+    pswrd     = answers.pswrd;
+
+    if ( answers.confirmInstall ) {
       createCoordsFile(row1, row2, row3, row4, row5);
     } else {
-    	return false;
+      return false;
     }
 
   });
@@ -331,38 +333,39 @@ function createCoords(){
 }
 
 function checkRegexRowCoords(string){
-	return /^[0-9]\d(?:,[0-9]\d){9}$/.test(string);
+  return /^[0-9]\d(?:,[0-9]\d){9}$/.test(string);
 }
 
 function createCoordsFile(row1, row2, row3, row4, row5){
 
-	var row = '';
-      row += '[' + row1 + '],\n';
-      row += '[' + row2 + '],\n';
-      row += '[' + row3 + '],\n';
-      row += '[' + row4 + '],\n';
-      row += '[' + row5 + ']\n';
+  var row = '';
 
-      row = encrypt(row, pswrd);
+  row += '[' + row1 + '],\n';
+  row += '[' + row2 + '],\n';
+  row += '[' + row3 + '],\n';
+  row += '[' + row4 + '],\n';
+  row += '[' + row5 + ']\n';
 
-	fs.writeFile('./.coords', row, function(err) {
-		if(err) {
-			return console.log(err);
-		} else {
-			console.log("Archivo .coords creado con éxito.");
-		}
-	});
+  row = encrypt(row, pswrd);
+
+  fs.writeFile('./.coords', row, function(err) {
+    if(err) {
+      return console.log(err);
+    } else {
+      console.log("Archivo .coords creado con éxito.");
+    }
+  });
 
 }
 
 function cleanCoords(){
-	fs.writeFile('./.coords', '', function(err) {
-		if(err) {
-			return console.log(err);
-		} else {
-			console.log("Archivo .coords borrado con éxito.");
-		}
-	});
+  fs.writeFile('./.coords', '', function(err) {
+    if(err) {
+      return console.log(err);
+    } else {
+      console.log("Archivo .coords borrado con éxito.");
+    }
+  });
 }
 
 var confirmCleanQuestion = [
@@ -374,7 +377,7 @@ var confirmCleanQuestion = [
 ];
 
 var askPassword = function(coordsFile){
-  inquirer.prompt( {
+  inquirer.prompt({
     type: 'password',
     name: 'pswrd',
     message: 'Ingresa el password que usaste para cifrar tus coordenadas:',
@@ -391,15 +394,13 @@ var askPassword = function(coordsFile){
           console.log(' No, es otra. ')
           return false;
         }
+
       } else {
         return "Ingresa el password con el que guardaste tus coordenadas";
       }
-
     }
   }, function( answer ) {
-
     askCoords();
-
   });
 }
 
@@ -407,7 +408,7 @@ var askPassword = function(coordsFile){
 // else create empty file
 function init(){
 
-	if (program.clean) {
+  if (program.clean) {
 
     inquirer.prompt( confirmCleanQuestion, function( answers ) {
       if ( answers.confirmClean ) {
@@ -417,29 +418,29 @@ function init(){
       }
     });
 
-	} else {
+  } else {
 
-		fs.stat('./.coords', function(err, stat) {
-		  if( err == null ) {
+    fs.stat('./.coords', function(err, stat) {
+      if( err == null ) {
 
-		    var coords = fs.readFileSync('./.coords', 'utf8');
+      var coords = fs.readFileSync('./.coords', 'utf8');
 
-		    if(coords) {
+      if(coords) {
           // ask for password
           askPassword(coords);
-		    } else {
+        } else {
           // no coords, create new ones
-		    	createCoords();
-		    }
-		  } else if( err.code == 'ENOENT' ) {
-		    fs.writeFile('./.coords', '');
-		    createCoords();
-		  } else {
-		    console.log('Error: ', err.code);
-		  }
-		});
+          createCoords();
+        }
+      } else if( err.code == 'ENOENT' ) {
+        fs.writeFile('./.coords', '');
+        createCoords();
+      } else {
+        console.log('Error: ', err.code);
+      }
+    });
 
-	}
+  }
 
 }
 
