@@ -59,7 +59,7 @@ function checkRegexCoord(string){
 }
 
 function restNumber(number){
-  return parseInt( number - 1 );
+  return parseInt(number - 1);
 }
 
 function getNumFromChar(letter){
@@ -141,7 +141,9 @@ var coordsQuestions = [
       return val.toLowerCase(); 
     }
   }
-  ,
+];
+
+var againQuestion = [
   {
     type: 'confirm',
     name: 'askAgain',
@@ -199,9 +201,12 @@ function askCoords() {
     console.log(' | ' + result1 + ' | ' + result2 + ' | ' + result3 + ' | ');
     console.log(' ----------------');
 
-    if (answers.askAgain) { // must be improved, it works by now
-      askCoords();
-    }
+    inquirer.prompt( againQuestion, function( answers ) {
+      var again = answers.askAgain;
+      if (answers.askAgain) {
+        askCoords();
+      }
+    });
 
   });
 

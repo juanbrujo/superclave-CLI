@@ -1,6 +1,6 @@
 {
   "name": "superclave",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "usa la SuperClave el Banco Santander Chile sin salir de tu terminal",
   "main": "bin/init.js",
   "bin": {
